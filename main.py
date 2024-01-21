@@ -56,21 +56,21 @@ from config import (
 # print(a["data"][0]["topic"])
 Influx = InfluxDataBase(URL,TOKEN,ORG)
 @app.get("/read/latest")
-async def fetch_movies():
+async def test():
     try:
         return Influx.read_data_latest()
     except:
         raise HTTPException(status_code=404, detail="Something has problem")
     
 @app.get("/")
-async def fetch_movies():
+async def test1():
     try:
-        return "sfdsdfsdf"
+        return "complete system eiei"
     except:
         raise HTTPException(status_code=404, detail="Something has problem")
 
 @app.get("/test")
-async def test():
+async def test2():
     return "complete system"
 
 if __name__ == "__main__":
