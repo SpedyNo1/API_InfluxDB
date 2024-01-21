@@ -1,7 +1,8 @@
 {
     "version": 2,
     "builds": [
-      { "src": "main.py", "use": "@vercel/python" }
+      { "src": "vercel.json", 
+      "use": "vercel-sapper"}
     ],
     "routes": [
       { "src": "/(.*)", "dest": "/main.py" }
