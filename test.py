@@ -103,11 +103,12 @@ class Test:
         self.org=org
     def read(self):
         query = f'from(bucket: "sensor")'  
-        query += f'|> range(start: -60m)'
+        query += f'|> range(start: -5m)'
         query += f'|> filter(fn:(r) => r["_measurement"] == "mqtt_consumer")'
-        # query += f'|> filter(fn: (r) => r._field == "DO_value" or r._field == "temp")'
-        # query=query+f'|> filter(fn: (r) => r["topic"] == "sgm/factory/1703407002")'
+        #query += f'|> filter(fn: (r) => r._field == "DO_value" or r._field == "temp")'
+        #query += f'|> filter(fn: (r) => r["topic"] == "sgm/factory/1703407002")'
         result = self.query_api.query(org=self.org, query=query)
+        #print(result)
         results = []
         for table in result:
             for record in table.records:
@@ -115,15 +116,16 @@ class Test:
         json_results = []
         #print(results)
         df = pd.DataFrame(results)
+        print(df) 
         df = df[df['topic'].str.startswith('sgm/factory/')].sort_values(by='time')
         #print(df)  
         count_unique = df['field'].unique()   
         #count_unique = ['conductivity_value' ,'DO_value' ,'pH_value']# Apply unique function
-        print(count_unique)
+        #print(count_unique)
         for field in count_unique:
             #print(field)
             buffer = df[(df["field"] == field)] 
-            print(buffer)
+            #print(buffer)
             for name, group in buffer.groupby('topic'):
                 #print(name)
                 #print(group)
@@ -132,7 +134,7 @@ class Test:
                 json_results.append(json_value)  
                 #print("-----------------------")
             #print("++++++++++++++++++")
-        print(json_results)
+        #print(json_results)
         data = json_results
         merged_data = {}
 
