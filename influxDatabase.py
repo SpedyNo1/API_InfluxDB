@@ -1,9 +1,6 @@
 from influxdb_client import InfluxDBClient
 from influxdb_client.client.write_api import SYNCHRONOUS
 import pandas as pd
-from config import (
-    URL,TOKEN,ORG,BROKER,PORT,TOPIC,CLIENT_ID,MQTT_USERNAME,MQTT_PASSWORD,TELEGRAF
-)
 pd.set_option('display.max_columns', None)
 
 class InfluxDataBase:
@@ -21,7 +18,6 @@ class InfluxDataBase:
         # query += f'|> filter(fn: (r) => r._field == "DO_value" or r._field == "temp")'
         # query=query+f'|> filter(fn: (r) => r["topic"] == "sgm/factory/1703407002")'
         result = self.query_api.query(org=self.org, query=query)
-        print(result)
         results = []
         for table in result:
             for record in table.records:
@@ -32,7 +28,6 @@ class InfluxDataBase:
         count_unique = df['field'].unique()   
         for field in count_unique:
             buffer = df[(df["field"] == field)] 
-            #print(buffer)
             for name, group in buffer.groupby('topic'):
                 mean_value = group['value'].mean()
                 json_value = {"topic":name,group['field'].unique()[0]:mean_value}
