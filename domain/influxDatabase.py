@@ -13,7 +13,7 @@ class InfluxDataBase:
         
     def read_data_latest(self):
         query = f'from(bucket: "Devices")'  
-        query += f'|> range(start: -60m)'
+        query += f'|> range(start: -360m)'
         query += f'|> filter(fn:(r) => r["_measurement"] == "mqtt_consumer")'
         # query += f'|> filter(fn: (r) => r._field == "DO_value" or r._field == "temp")'
         # query=query+f'|> filter(fn: (r) => r["topic"] == "sgm/factory/1703407002")'
