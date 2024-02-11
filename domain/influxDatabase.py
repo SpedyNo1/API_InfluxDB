@@ -12,8 +12,8 @@ class InfluxDataBase:
         self.org=org
         
     def read_data_latest(self):
-        query = f'from(bucket: "sensor")'  
-        query += f'|> range(start: -5m)'
+        query = f'from(bucket: "Devices")'  
+        query += f'|> range(start: -60m)'
         query += f'|> filter(fn:(r) => r["_measurement"] == "mqtt_consumer")'
         # query += f'|> filter(fn: (r) => r._field == "DO_value" or r._field == "temp")'
         # query=query+f'|> filter(fn: (r) => r["topic"] == "sgm/factory/1703407002")'
@@ -23,8 +23,10 @@ class InfluxDataBase:
             for record in table.records:
                 results.append({"time":record.get_time(),"field":record.get_field(),"value":record.get_value(),"topic":record.values.get("topic")})
         json_results = []
+        if not results:
+            return {"data":[]}
         df = pd.DataFrame(results)
-        df = df[df['topic'].str.startswith('sgm/factory/')].sort_values(by='time')
+        df = df[df['topic'].str.startswith('devices/iot/')].sort_values(by='time')
         count_unique = df['field'].unique()   
         for field in count_unique:
             buffer = df[(df["field"] == field)] 
@@ -44,4 +46,3 @@ class InfluxDataBase:
 
         result_list = [{'topic': topic, **values} for topic, values in merged_data.items()]
         return {"data":result_list}
-
